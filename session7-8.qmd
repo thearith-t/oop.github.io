@@ -1,0 +1,755 @@
+---
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    transition: fade
+    font-family: 'Trebuchet MS'
+    scrollable: true
+---
+
+<style>
+body { font-family: 'Trebuchet MS', sans-serif; }
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 { color: #C41E3A; }
+.reveal { font-family: 'Trebuchet MS', sans-serif; }
+.reveal pre { font-size: 0.72em; }
+.big-center { text-align:center; font-size: 1.4em; line-height: 1.6; margin-top: 30px; }
+</style>
+
+<div style="text-align:center; margin-top: 40px; line-height: 1.4;">
+  <h1 style="font-size: 2.5em; font-weight: 700; color: #C41E3A; margin-bottom: 10px;">
+    Programming Language II
+  </h1>
+  <h2 style="font-size: 1.6em; font-weight: 500; color: #555;">
+    Introduction to Object-Oriented Programming
+  </h2>
+  <div style="border-bottom: 4px solid #C41E3A; width: 45%; margin: 18px auto;"></div>
+  <h3 style="margin-top: 25px; font-weight: 700; color: #050E3C">
+    By: MIN Sothearith
+  </h3>
+  <h4 style="font-weight: 700; color: #666;">
+    Phnom Penh International University
+  </h4>
+</div>
+
+## Today's Session
+
+Today is about **one big idea**: Object-Oriented Programming (OOP).
+
+We will take it **slowly**, one step at a time:
+
+::: {.callout-note}
+## What we will cover
+1. **Why** do we need OOP?
+2. **What** is a class? **Why** a class?
+3. **What** is an object?
+4. **Building** a class -- piece by piece
+5. **What each part does** -- `__init__`, `self`, attributes, methods
+:::
+
+::: {.callout-tip}
+There is **no need to rush**. Take your time to understand each idea before we move on.
+:::
+
+---
+
+# Part 1 -- Why OOP?
+
+---
+
+## A simple problem
+
+Imagine we want to keep track of **one dog** in our program.
+
+A dog has a **name** and an **age**.
+
+```python
+dog_name = "Rex"
+dog_age = 3
+```
+
+So far, so easy. Two variables. 👍
+
+::: {.callout-note}
+Let's see what happens when our program **grows**.
+:::
+
+## Now we have three dogs
+
+```python
+dog1_name = "Rex"
+dog1_age = 3
+
+dog2_name = "Bella"
+dog2_age = 5
+
+dog3_name = "Max"
+dog3_age = 2
+```
+
+This is already getting **messy** -- six separate variables for just three dogs.
+
+::: {.callout-important}
+What if we had **100 dogs**? 200 variables? This does not work well.
+:::
+
+## We also want dogs to *do* things
+
+A dog can **bark**. So we write a function:
+
+```python
+def bark(name):
+    print(f"{name} says Woof!")
+
+bark(dog1_name)    # Rex says Woof!
+bark(dog2_name)    # Bella says Woof!
+```
+
+Notice the problem:
+
+- The **data** (`dog1_name`) is in one place
+- The **action** (`bark`) is in another place
+- Nothing connects them -- we must *remember* to pass the right name
+
+## The real problem
+
+In our current style:
+
+::: {.callout-important}
+The **data** and the **actions** that belong together are **separated**.
+:::
+
+A dog's name, age, and its ability to bark all describe **one thing** -- a dog.
+
+But in our code they are scattered into loose variables and separate functions.
+
+::: {.callout-tip}
+**Wouldn't it be nice** if one "dog" could hold its own name, its own age, AND know how to bark -- all in one place?
+:::
+
+## That is exactly what OOP does
+
+<div class="big-center">
+OOP lets us bundle <strong>data</strong> and <strong>actions</strong><br>together into <strong>one unit</strong> called an <strong>object</strong>.
+</div>
+
+::: {.callout-note}
+Instead of loose variables + separate functions, each **dog** becomes a single object that carries its own data and its own behaviour.
+:::
+
+That is the whole idea. Everything else today is just **how** we do this in Python.
+
+---
+
+# Part 2 -- What is a Class?
+
+---
+
+## The key word: blueprint
+
+Before we build dogs, we need a **plan** for what a dog *is*.
+
+<div class="big-center">
+A <strong>class</strong> is a <strong>blueprint</strong>.
+</div>
+
+A blueprint describes:
+
+- What **data** a dog has (name, age)
+- What **actions** a dog can do (bark)
+
+::: {.callout-note}
+A blueprint is **not** a real dog. It is the *plan* used to make dogs.
+:::
+
+## Blueprint vs the real thing
+
+| Blueprint (the plan) | Real things made from it |
+|----------------------|--------------------------|
+| House blueprint | Many real houses |
+| Cookie cutter | Many real cookies |
+| `Dog` class | Rex, Bella, Max |
+
+::: {.callout-tip}
+You draw the blueprint **once**, then build **many** things from it.
+:::
+
+## Why do we need a class?
+
+Remember our messy 200 variables?
+
+A class fixes that. We describe a dog **once**, then make as many dogs as we want -- each one neat and self-contained.
+
+::: {.callout-note}
+**Why a class?**
+
+- Describe something **one time**
+- Create **many** of them easily
+- Keep each one's **data and actions together**
+:::
+
+So the plan for today: **first write the blueprint (class)**, then **build dogs (objects)** from it.
+
+---
+
+# Part 3 -- What is an Object?
+
+---
+
+## Object = a real thing built from the class
+
+<div class="big-center">
+A <strong>class</strong> is the blueprint.<br>
+An <strong>object</strong> is a real thing built from it.
+</div>
+
+```python
+# Dog        <- the blueprint (class)
+# rex        <- a real dog       (object)
+# bella      <- another real dog (object)
+```
+
+::: {.callout-note}
+Another word for object is **instance**. "Rex is an instance of the Dog class."
+:::
+
+## One class, many objects
+
+```python
+# One blueprint:
+class Dog:
+    ...
+
+# Many objects:
+rex   = Dog(...)    # object 1
+bella = Dog(...)    # object 2
+max   = Dog(...)    # object 3
+```
+
+Each object is **separate**. Changing Rex's age does **not** change Bella's age.
+
+::: {.callout-tip}
+This is the fix for our messy variables: each dog now holds **its own** data.
+:::
+
+---
+
+# Part 4 -- Building a Class, Step by Step
+
+---
+
+## Step 1 -- An empty class
+
+We start with the smallest possible class:
+
+```python
+class Dog:
+    pass
+```
+
+- `class` is the keyword
+- `Dog` is the name (we capitalise class names)
+- `pass` just means "empty for now"
+
+```python
+rex = Dog()        # build one dog object
+print(rex)         # <__main__.Dog object at 0x...>
+```
+
+::: {.callout-note}
+`Dog()` builds a new object. Right now our dog has no name or age yet -- let's add them next.
+:::
+
+## Step 2 -- Give the dog data with `__init__`
+
+We want every new dog to start with a **name** and an **age**.
+
+```python
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+```
+
+This new part, `__init__`, looks strange. Let's understand it **slowly**, line by line.
+
+::: {.callout-note}
+Don't worry about `self` yet -- we explain it on the next slide.
+:::
+
+## What does `__init__` do?
+
+```python
+def __init__(self, name, age):
+    self.name = name
+    self.age = age
+```
+
+- `__init__` runs **automatically** every time we create a new dog
+- Its job is to **set up the starting data** of the object
+- We give it a `name` and an `age`, and it stores them in the dog
+
+::: {.callout-note}
+`__init__` is called the **constructor** -- it *constructs* (sets up) a new object.
+:::
+
+## What is `self`?
+
+```python
+def __init__(self, name, age):
+    self.name = name
+    self.age = age
+```
+
+<div class="big-center">
+<code>self</code> means <strong>"this particular dog."</strong>
+</div>
+
+- `self.name = name` means: store the name **inside this dog**
+- When we make Rex, `self` is Rex. When we make Bella, `self` is Bella.
+
+::: {.callout-important}
+Every method's **first** parameter is `self`. Python fills it in for you -- you never pass it yourself.
+:::
+
+## Step 3 -- Create real dogs
+
+Now the blueprint is ready. Let's build dogs:
+
+```python
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+rex   = Dog("Rex", 3)      # __init__ runs: name="Rex", age=3
+bella = Dog("Bella", 5)    # __init__ runs: name="Bella", age=5
+```
+
+When we write `Dog("Rex", 3)`:
+
+1. Python creates a new empty dog
+2. `__init__` runs automatically
+3. It stores `name="Rex"` and `age=3` inside that dog
+
+## Reading the data (attributes)
+
+The data stored inside an object is called an **attribute**. We read it with a **dot**:
+
+```python
+rex   = Dog("Rex", 3)
+bella = Dog("Bella", 5)
+
+print(rex.name)     # Rex
+print(rex.age)      # 3
+print(bella.name)   # Bella
+print(bella.age)    # 5
+```
+
+::: {.callout-note}
+`rex.name` reads **Rex's own** name. `bella.name` reads **Bella's own** name. They are separate.
+:::
+
+---
+
+# Part 5 -- Methods: Giving Objects Behaviour
+
+---
+
+## What is a method?
+
+A **method** is a function that lives **inside** a class.
+
+It describes something the object can **do**.
+
+::: {.callout-note}
+Our dog has data (name, age). Now we want it to **bark**. Let's add a `bark` method -- one method at a time.
+:::
+
+## Adding our first method: `bark`
+
+```python
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def bark(self):                        # <- our new method
+        print(f"{self.name} says Woof!")
+```
+
+What does `bark` do?
+
+- It is a function inside the class
+- It uses `self.name` to get **this dog's** name
+- It prints that the dog barks
+
+## Calling the `bark` method
+
+```python
+rex   = Dog("Rex", 3)
+bella = Dog("Bella", 5)
+
+rex.bark()       # Rex says Woof!
+bella.bark()     # Bella says Woof!
+```
+
+- `rex.bark()` -- here `self` becomes **Rex**, so it prints Rex's name
+- `bella.bark()` -- here `self` becomes **Bella**, so it prints Bella's name
+
+::: {.callout-tip}
+Same method, but each dog uses **its own** data. This is the power of OOP.
+:::
+
+## Adding a second method: `birthday`
+
+Let's add **one more** method -- making the dog one year older.
+
+```python
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def bark(self):
+        print(f"{self.name} says Woof!")
+
+    def birthday(self):                    # <- our second method
+        self.age = self.age + 1
+        print(f"{self.name} is now {self.age}!")
+```
+
+## What does `birthday` do?
+
+```python
+def birthday(self):
+    self.age = self.age + 1
+    print(f"{self.name} is now {self.age}!")
+```
+
+- It takes **this dog's** current age (`self.age`)
+- Adds 1 to it, and **stores it back** inside the dog
+- Then prints the new age
+
+```python
+rex = Dog("Rex", 3)
+rex.birthday()      # Rex is now 4!
+rex.birthday()      # Rex is now 5!
+```
+
+::: {.callout-note}
+Each call changes Rex's **own** age, and remembers it for next time.
+:::
+
+## The full class so far
+
+```python
+class Dog:
+    def __init__(self, name, age):     # set up the data
+        self.name = name
+        self.age = age
+
+    def bark(self):                    # behaviour 1
+        print(f"{self.name} says Woof!")
+
+    def birthday(self):                # behaviour 2
+        self.age = self.age + 1
+        print(f"{self.name} is now {self.age}!")
+
+rex = Dog("Rex", 3)
+rex.bark()          # Rex says Woof!
+rex.birthday()      # Rex is now 4!
+```
+
+::: {.callout-tip}
+Everything about a dog -- its data **and** its actions -- now lives in **one place**. That was our goal!
+:::
+
+---
+
+# Part 6 -- A Nicer Way to Print
+
+---
+
+## Printing an object looks ugly
+
+```python
+rex = Dog("Rex", 3)
+print(rex)      # <__main__.Dog object at 0x000001E2...>
+```
+
+That memory address is not helpful. We would like something readable.
+
+::: {.callout-note}
+We can teach our class **how to print itself** using a special method called `__str__`.
+:::
+
+## The `__str__` method
+
+```python
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __str__(self):
+        return f"Dog: {self.name}, age {self.age}"
+
+rex = Dog("Rex", 3)
+print(rex)      # Dog: Rex, age 3
+```
+
+- `__str__` runs automatically when we `print()` an object
+- It must **return** a string (a readable description)
+
+::: {.callout-tip}
+Now printing a dog gives us something clear and friendly.
+:::
+
+---
+
+# Part 7 -- One More Example
+
+---
+
+## A `Student` class
+
+Let's apply the **same structure** to a new example -- a student with a name and a score.
+
+```python
+class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+    def is_passing(self):
+        return self.score >= 60
+
+    def __str__(self):
+        return f"{self.name}: {self.score}"
+```
+
+Same pattern as `Dog`: **data** in `__init__`, **behaviour** in methods.
+
+## Using the `Student` class
+
+```python
+alice = Student("Alice", 92)
+bob   = Student("Bob", 45)
+
+print(alice)               # Alice: 92
+print(alice.is_passing())  # True
+print(bob.is_passing())    # False
+```
+
+::: {.callout-note}
+Once you understand **one** class, every other class works the **same way**. The pattern repeats.
+:::
+
+---
+
+## What we learned today
+
+| Idea | In one sentence |
+|------|-----------------|
+| **Why OOP** | Keep an object's data and actions **together** in one place |
+| **Class** | A **blueprint** -- describe something once |
+| **Object** | A real thing **built** from the class |
+| **`__init__`** | Runs automatically; **sets up** the starting data |
+| **`self`** | Means **"this particular object"** |
+| **Attribute** | Data stored in an object -- read with `obj.name` |
+| **Method** | A function inside the class -- the object's **behaviour** |
+| **`__str__`** | Teaches the object how to **print itself** |
+
+::: {.callout-tip}
+Take your time with these. Once they click, OOP becomes easy.
+:::
+
+## What comes next
+
+Today we learned the **structure** of classes and objects.
+
+In future sessions we will explore the **four pillars** of OOP:
+
+- **Encapsulation** -- protecting an object's data
+- **Inheritance** -- one class reusing another
+- **Polymorphism** -- same action, different behaviour
+- **Abstraction** -- hiding complex details
+
+::: {.callout-note}
+For now, make sure you are comfortable with **class, object, `__init__`, `self`, attributes, and methods**.
+:::
+
+---
+
+# Your Turn -- Practice 🛠️
+
+---
+
+## Practice -- How it works
+
+Three short exercises. Try each one **yourself first**, then check the sample solution.
+
+::: {.callout-tip}
+Use the **same pattern** every time:
+data in `__init__` → behaviour in methods → use `self` to reach the object's own data.
+:::
+
+::: {.callout-note}
+Take your time. It is fine to look back at the `Dog` example for help.
+:::
+
+---
+
+# Exercise 1
+
+## A `Car` Class
+
+**Task:** Create a class called `Car` that:
+
+1. Has an `__init__` storing two attributes: `brand` and `year`
+2. Has a method `describe()` that prints: `"This is a 2020 Toyota."`
+
+Then create **two** different car objects and call `describe()` on each.
+
+**Expected output:**
+```
+This is a 2020 Toyota.
+This is a 2018 Honda.
+```
+
+::: {.callout-note}
+## Hint
+Inside `describe()`, use `self.year` and `self.brand`. Remember the first parameter of every method is `self`.
+:::
+
+## Exercise 1 -- Sample Solution
+
+```python
+class Car:
+    def __init__(self, brand, year):
+        self.brand = brand
+        self.year = year
+
+    def describe(self):
+        print(f"This is a {self.year} {self.brand}.")
+
+car1 = Car("Toyota", 2020)
+car2 = Car("Honda", 2018)
+
+car1.describe()      # This is a 2020 Toyota.
+car2.describe()      # This is a 2018 Honda.
+```
+
+**Skills practiced:** defining a class, `__init__`, attributes, a method using `self`
+
+---
+
+# Exercise 2
+
+## A `BankAccount` Class
+
+**Task:** Create a class called `BankAccount` that:
+
+1. Has an `__init__` with `owner` and `balance`
+2. Has a method `deposit(amount)` that **adds** to the balance
+3. Has a method `show()` that prints the owner and current balance
+
+Create one account, deposit twice, then show the balance.
+
+**Expected output:**
+```
+Alice's balance: 100
+Alice's balance: 130
+Alice's balance: 180
+```
+
+::: {.callout-note}
+## Hint
+Inside `deposit`, change the object's own data with `self.balance = self.balance + amount`.
+:::
+
+## Exercise 2 -- Sample Solution
+
+```python
+class BankAccount:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        self.balance = self.balance + amount
+
+    def show(self):
+        print(f"{self.owner}'s balance: {self.balance}")
+
+acc = BankAccount("Alice", 100)
+acc.show()           # Alice's balance: 100
+acc.deposit(30)
+acc.show()           # Alice's balance: 130
+acc.deposit(50)
+acc.show()           # Alice's balance: 180
+```
+
+**Skills practiced:** a method that **changes** the object's data, calling methods in sequence
+
+---
+
+# Exercise 3
+
+## A `Student` Class with `__str__`
+
+**Task:** Create a class called `Student` that:
+
+1. Has an `__init__` with `name` and `score`
+2. Has a method `is_passing()` that returns `True` if score is 60 or more
+3. Has a `__str__` method so that printing the student shows: `"Alice (score: 92)"`
+
+Create two students, print each one, and print whether each is passing.
+
+**Expected output:**
+```
+Alice (score: 92)
+True
+Bob (score: 45)
+False
+```
+
+::: {.callout-note}
+## Hint
+`__str__` must **return** a string (not print it). `is_passing()` can `return self.score >= 60`.
+:::
+
+## Exercise 3 -- Sample Solution
+
+```python
+class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+    def is_passing(self):
+        return self.score >= 60
+
+    def __str__(self):
+        return f"{self.name} (score: {self.score})"
+
+alice = Student("Alice", 92)
+bob   = Student("Bob", 45)
+
+print(alice)               # Alice (score: 92)
+print(alice.is_passing())  # True
+print(bob)                 # Bob (score: 45)
+print(bob.is_passing())    # False
+```
+
+**Skills practiced:** a method that **returns** a value, the `__str__` method, putting it all together
+
+---
+
+<div style="text-align:center; margin-top: 80px; line-height: 1.6;">
+  <h1 style="font-size: 3em; font-weight: 700; color: #C41E3A;">Thank You</h1>
+  <div style="border-bottom: 3px solid #C41E3A; width: 30%; margin: 24px auto;"></div>
+  <h3 style="font-weight: 700; color: #050E3C; margin-top: 30px;">MIN Sothearith</h3>
+  <h4 style="font-weight: 400; color: #666;">Phnom Penh International University</h4>
+</div>
